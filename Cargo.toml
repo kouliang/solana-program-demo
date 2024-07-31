@@ -1,0 +1,18 @@
+[package]
+name = "rust-app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "kl"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+borsh = {version = "1.5.0", features = ["derive"]}
+solana-program = "2.0.3"
+
+[dev-dependencies]
+rust-client = { git = "https://github.com/kouliang/solana-client.git" }
+solana-sdk = "2.0.3"

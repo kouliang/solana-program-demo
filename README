@@ -1,0 +1,13 @@
+Run the following command to set the environment to localhost:
+    solana config set -u localhost
+
+Start the localhost cluster:
+    solana-test-validator
+
+Deploy:
+    make deploy
+
+Run client program:
+    make hello
+    make greet
+    ...
