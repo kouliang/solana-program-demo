@@ -28,7 +28,7 @@ fn create_pda(wallet: &Wallet, program_id: &Pubkey, seed: &[u8]) -> Pubkey {
     let signing_keypairs = &[&wallet.payer];
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
     println!("new pda account: {}", pda);
 
     pda

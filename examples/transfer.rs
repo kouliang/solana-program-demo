@@ -37,7 +37,7 @@ fn transfer(wallet: &Wallet, program_id: &Pubkey, from: &Pubkey, to: &Pubkey, la
     let signing_keypairs = &[&wallet.payer];
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 }
 
 fn transfer_with_cpi(wallet: &Wallet, program_id: &Pubkey, to: &Pubkey, lamports: u64) {
@@ -54,5 +54,5 @@ fn transfer_with_cpi(wallet: &Wallet, program_id: &Pubkey, to: &Pubkey, lamports
     let signing_keypairs = &[&wallet.payer];
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 }

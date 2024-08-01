@@ -33,7 +33,7 @@ fn create(wallet: &Wallet, program_id: &Pubkey) -> Pubkey {
     let signing_keypairs = &[&wallet.payer, &new_keypair];
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 
     // show data
     let new_account_id = new_keypair.pubkey();
@@ -59,5 +59,5 @@ fn close(wallet: &Wallet, program_id: &Pubkey, target: Pubkey) {
     let signing_keypairs = &[&wallet.payer];
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 }

@@ -52,7 +52,7 @@ fn createaccount_and_invokeprogram(wallet: &Wallet, program_id: Pubkey) -> Pubke
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1, instruction2], signing_keypairs);
 
     // send
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 
     println!("greeting_address: {}", greeting_pub);
     greeting_pub
@@ -73,5 +73,5 @@ fn invoke_program(wallet: &Wallet, program_id: Pubkey, greeting_accounts: &[Pubk
     let transaction = transaction_builder::signed_independent(&wallet, &[instruction1], signing_keypairs);
 
     // send
-    rust_client::send_transaction(&wallet, &transaction);
+    wallet.send_transaction(&transaction);
 }
