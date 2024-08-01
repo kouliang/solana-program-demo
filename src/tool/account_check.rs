@@ -5,6 +5,7 @@ use solana_program::{
 
     account_info::{next_account_info, AccountInfo},
     pubkey::Pubkey,
+    sysvar::{rent::Rent, Sysvar},
 
     system_program,
 };
@@ -25,9 +26,9 @@ pub fn account_is_initialized(account: &AccountInfo) -> bool {
     account.lamports() != 0
 }
 
-fn check_accounts(accounts: &[AccountInfo]) -> ProgramResult {
+fn check_accounts(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
 
-    // 检查 accounts
+    // 检查 数量
     // =====================================
     if accounts.len() < 3 {
         msg!("payer, account_to_create, system_program");
@@ -36,20 +37,43 @@ fn check_accounts(accounts: &[AccountInfo]) -> ProgramResult {
 
     // accounts是有序的
     let accounts_iter = &mut accounts.iter();
-    let _payer = next_account_info(accounts_iter)?;
-    let account_to_create = next_account_info(accounts_iter)?;
+    let payer = next_account_info(accounts_iter)?;
+    let account2 = next_account_info(accounts_iter)?;
     let system_program = next_account_info(accounts_iter)?;
 
+    // Checking if payer account is the signer
+    if !payer.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+    }
 
-    // 检查 AccountInfo
-    // =====================================
-    if account_to_create.lamports() > 0 {
-        return Err(ProgramError::AccountAlreadyInitialized);
-    };
-
+    // Checking if the system program is valid
+    if system_program.key.ne(&id_system()) {
+        return Err(ProgramError::IncorrectProgramId);
+    }
     if system_program.key != &id_system() {
         return Err(ProgramError::IncorrectProgramId);
     };
+
+
+    // 检查 余额
+    if account2.lamports() > 0 {
+        return Err(ProgramError::AccountAlreadyInitialized);
+    };
+
+    // Checking if hello state account is rent exempt
+    if !Rent::get()?.is_exempt(account2.lamports(), 1) {
+        return Err(ProgramError::AccountNotRentExempt);
+    }
+
+    // Checking if hello state account is writable
+    if !account2.is_writable {
+        return Err(ProgramError::InvalidAccountData);
+    }
+
+    // Checking if account's owner is the current program
+    if account2.owner.ne(&program_id) {
+        return Err(ProgramError::IllegalOwner);
+    }
     
     Ok(())
 }
