@@ -26,6 +26,19 @@ pub fn account_is_initialized(account: &AccountInfo) -> bool {
     account.lamports() != 0
 }
 
+/**
+ *  只有 lamports 和 data 是可以修改的。两者都使用了 RefCell 结构，实现内部可变性。
+ *  pub struct AccountInfo<'a> {
+        pub key: &'a Pubkey,
+        pub lamports: Rc<RefCell<&'a mut u64>>,
+        pub data: Rc<RefCell<&'a mut [u8]>>,
+        pub owner: &'a Pubkey,
+        pub rent_epoch: Epoch,
+        pub is_signer: bool,
+        pub is_writable: bool,
+        pub executable: bool,
+    }
+ */
 fn check_accounts(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
 
     // 检查 数量
